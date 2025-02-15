@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { ExpenseCategory } from './ExpenseCategory.js';
-import { ExpenseTrackerApiComponentHtml } from './Ex'
 
 const ExpenseTrackerApiComponent = () => {
   const [userId, setUserId] = useState('');
