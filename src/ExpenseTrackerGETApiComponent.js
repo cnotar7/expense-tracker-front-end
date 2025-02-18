@@ -18,6 +18,8 @@ const ExpenseTrackerGETApiComponent = () => {
   const [expenseCategory, setExpenseCategory] = useState('');
   const [getResponse, setGetResponse] = useState('');
   const [data, setData] = useState([]);
+  const [totalExpenses, setTotalExpenses] = useState('');
+  const [error, setError] = useState(null);
 
   const handleGetExpenses = async (event) => {
     event.preventDefault();
@@ -26,21 +28,31 @@ const ExpenseTrackerGETApiComponent = () => {
     console.log("Using get request: ", fullGetRequest);
     try {
         const response = await axios.get(fullGetRequest);
+        setError(null);
         setData(response.data);
+        calculateExpenses(response.data);
         //const worksheet = XLSX.utils.json_to_sheet(response.data);
         //const workbook = XLSX.utils.book_new();
         //XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
         //XLSX.writeFile(workbook, 'data.xlsx');
     } catch (error) {
         console.error(`Error sending GET request to fullGetRequest: `, error);
-        setGetResponse(`Error sending POST request to fullGetRequest: `, error);
+        setError('Error fetching data: ' + error );
     }
   };
+
+  function calculateExpenses (expenseRecords) {
+    let expenses = 0;
+    for (let i = 0; i < expenseRecords.length; ++i) {
+      expenses += expenseRecords[i]["amount"];
+    }
+    setTotalExpenses(expenses);
+  }
 
   return (
     <div>
       <div>
-        <h2>Get Expenses for User</h2>
+        <h2>Expense Report</h2>
         <h3>*** Use any of the fields to query a custom result ***<br></br>
         If no fields are used, will return all expenses stored</h3>
         <form onSubmit={handleGetExpenses}>
@@ -61,12 +73,14 @@ const ExpenseTrackerGETApiComponent = () => {
           <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </div>
         <button type="submit">Get</button>
-        <h3>Response:</h3>
-        <pre>{JSON.stringify(getResponse, null, 2)}</pre>
+        {error && <p>ERROR: {error}</p>} {/* Display the variable if it has a value */}
         </form>
-        <div style={{ padding: '20px' }}>
-          <p>Loading data...</p> : <DataTable data={data} />
-        </div>
+      </div>
+      <div>
+      </div>
+      <div style={{ padding: '20px' }}>
+        {totalExpenses && <p>Total Expenses: {totalExpenses}</p>} {/* Display the variable if it has a value */}  
+        <DataTable data={data} />
       </div>
 
     </div>
