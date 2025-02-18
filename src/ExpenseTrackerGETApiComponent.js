@@ -12,7 +12,8 @@ const ExpenseTrackerGETApiComponent = () => {
   const [userId, setUserId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
-  const [date, setDate] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('');
   const [getResponse, setGetResponse] = useState('');
@@ -21,7 +22,7 @@ const ExpenseTrackerGETApiComponent = () => {
   const handleGetExpenses = async (event) => {
     event.preventDefault();
     const baseGetRequestURL = 'http://localhost:8080/expenses';
-    const fullGetRequest = buildGetRequest(baseGetRequestURL, userId, paymentMethod);
+    const fullGetRequest = buildGetRequest(baseGetRequestURL, userId, paymentMethod, startDate, endDate);
     console.log("Using get request: ", fullGetRequest);
     try {
         const response = await axios.get(fullGetRequest);
@@ -50,6 +51,14 @@ const ExpenseTrackerGETApiComponent = () => {
         <div>
           <label>Payment Method: </label>
           <input type="text" value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)} />
+        </div>
+        <div>
+          <label>Start Date: </label>
+          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+        </div>
+        <div>
+          <label>End Date: </label>
+          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
         </div>
         <button type="submit">Get</button>
         <h3>Response:</h3>

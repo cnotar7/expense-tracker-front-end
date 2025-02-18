@@ -1,13 +1,23 @@
-function buildGetRequest(getRequest, userId, paymentMethod) {
+function buildGetRequest(getRequest, userId, paymentMethod, startDate, endDate) {
     const params = new URLSearchParams();
-    if (userId !== null && userId !== undefined && userId !== '') {
+    if (isParamAvailable(userId)) {
         params.append('userId', userId);
     }
-    if (paymentMethod != null && paymentMethod !== undefined && paymentMethod !== '') {
+    if (isParamAvailable(paymentMethod)) {
         params.append('paymentMethod', paymentMethod);
+    }
+    if (isParamAvailable(startDate)) {
+        params.append('startDate', startDate);
+    }
+    if (isParamAvailable(endDate)) {
+        params.append('endDate', endDate);
     }
 
     return `${getRequest}?${params.toString()}`;
+}
+
+function isParamAvailable(param) {
+    return param !== null && param !== undefined && param !== '';
 }
 
 export { buildGetRequest };
