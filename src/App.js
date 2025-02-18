@@ -5,6 +5,12 @@ import ExpenseTrackerPOSTApiComponent from './ExpenseTrackerPOSTApiComponent';
 import ExpenseTrackerGETApiComponent from './ExpenseTrackerGETApiComponent';
 
 function App() {
+  const [selectedComponent, setSelectedComponent] = useState(null);
+
+  const handleSelectComponent = (component) => {
+    setSelectedComponent(component);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -24,8 +30,16 @@ function App() {
       <h1>
         Testing Expense Tracker API
       </h1>
-      <ExpenseTrackerPOSTApiComponent />
-      <ExpenseTrackerGETApiComponent />
+      <div style={{ padding: '20px' }}>
+        <nav>
+          <button onClick={() => handleSelectComponent('AddExpenses')}>Add Expenses</button>
+          <button onClick={() => handleSelectComponent('GetExpenseReport')}>Get Expense Report</button>
+        </nav>
+        <div>
+          {selectedComponent === 'AddExpenses' && <ExpenseTrackerPOSTApiComponent />}
+          {selectedComponent === 'GetExpenseReport' && <ExpenseTrackerGETApiComponent />}
+        </div>
+      </div>
     </div>
   );
 }
