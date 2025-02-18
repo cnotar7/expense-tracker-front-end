@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { ExpenseCategory } from './ExpenseCategory.js';
+import { saveAs } from 'file-saver';
+import { buildGetRequest } from './helper.js';
 
-const ExpenseTrackerApiComponent = () => {
+const ExpenseTrackerPOSTApiComponent = () => {
   const [userId, setUserId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
   const [date, setDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('');
-  const [response, setResponse] = useState('');
+  const [postResponse, setPostResponse] = useState('');
+  const [getResponse, setGetResponse] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -24,14 +27,12 @@ const ExpenseTrackerApiComponent = () => {
 
     try {
         const response = await axios.post('http://localhost:8080/expenses', postData);
-        setResponse(response.data);
+        setPostResponse(response.data);
     } catch (error) {
         console.error('Error sending POST request to http://localhost:8080/expenses: ', error);
-        setResponse('Error sending POST request to http://localhost:8080/expenses: ', error);
+        setPostResponse('Error sending POST request to http://localhost:8080/expenses: ', error);
     }
   };
-
-  
 
   return (
     <div>
@@ -72,9 +73,9 @@ const ExpenseTrackerApiComponent = () => {
       <button type="submit">Submit</button>
       </form>
       <h3>Response:</h3>
-      <pre>{JSON.stringify(response, null, 2)}</pre>
+      <pre>{JSON.stringify(postResponse, null, 2)}</pre>
     </div>
   );
 };
 
-export default ExpenseTrackerApiComponent;
+export default ExpenseTrackerPOSTApiComponent;

@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
-import ExpenseTrackerApiComponent from './ExpenseTrackerApiComponent';
+import React, { useState } from 'react'
+import ExpenseTrackerPOSTApiComponent from './ExpenseTrackerPOSTApiComponent';
+import ExpenseTrackerGETApiComponent from './ExpenseTrackerGETApiComponent';
 
 function App() {
   return (
@@ -22,7 +24,8 @@ function App() {
       <h1>
         Testing Expense Tracker API
       </h1>
-      <ExpenseTrackerApiComponent />
+      <ExpenseTrackerPOSTApiComponent />
+      <ExpenseTrackerGETApiComponent />
     </div>
   );
 }
