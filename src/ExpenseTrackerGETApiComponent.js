@@ -2,13 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { ExpenseCategory } from './ExpenseCategory.js';
 import { saveAs } from 'file-saver';
-import { buildGetRequest } from './helper.js';
+import { buildGetRequest, calculateExpenses, formatAsUSCurrency } from './helper.js';
 import * as XLSX from 'xlsx'
 import DataTable from './DataTable.js';
 
 
 
 const ExpenseTrackerGETApiComponent = () => {
+  const [data, setData] = useState([]);
+  const [getResponse, setGetResponse] = useState('');
+  const [error, setError] = useState(null);
   const [userId, setUserId] = useState('');
   const [amount, setAmount] = useState('');
   const [description, setDescription] = useState('');
@@ -16,10 +19,8 @@ const ExpenseTrackerGETApiComponent = () => {
   const [endDate, setEndDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('');
-  const [getResponse, setGetResponse] = useState('');
-  const [data, setData] = useState([]);
-  const [totalExpenses, setTotalExpenses] = useState('');
-  const [error, setError] = useState(null);
+  const [formattedTotalExpenses, setFormattedTotalExpenses] = useState('');
+  
 
   const handleGetExpenses = async (event) => {
     event.preventDefault();
@@ -30,7 +31,8 @@ const ExpenseTrackerGETApiComponent = () => {
         const response = await axios.get(fullGetRequest);
         setError(null);
         setData(response.data);
-        calculateExpenses(response.data);
+        const totalExpenses = calculateExpenses(response.data);
+        setFormattedTotalExpenses(formatAsUSCurrency(totalExpenses));
         //const worksheet = XLSX.utils.json_to_sheet(response.data);
         //const workbook = XLSX.utils.book_new();
         //XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
@@ -41,20 +43,14 @@ const ExpenseTrackerGETApiComponent = () => {
     }
   };
 
-  function calculateExpenses (expenseRecords) {
-    let expenses = 0;
-    for (let i = 0; i < expenseRecords.length; ++i) {
-      expenses += expenseRecords[i]["amount"];
-    }
-    setTotalExpenses(expenses);
-  }
+
 
   return (
     <div>
       <div>
         <h2>Expense Report</h2>
         <h3>*** Use any of the fields to query a custom result ***<br></br>
-        If no fields are used, will return all expenses stored</h3>
+        If a field is empty, that field will not be queried</h3>
         <form onSubmit={handleGetExpenses}>
         <div>
           <label>User Id:</label>
@@ -79,7 +75,7 @@ const ExpenseTrackerGETApiComponent = () => {
       <div>
       </div>
       <div style={{ padding: '20px' }}>
-        {totalExpenses && <p>Total Expenses: {totalExpenses}</p>} {/* Display the variable if it has a value */}  
+        {formattedTotalExpenses && <p>Total Expenses {formattedTotalExpenses}</p>} {/* Display the variable if it has a value */}  
         <DataTable data={data} />
       </div>
 

@@ -11,8 +11,8 @@ const ExpenseTrackerPOSTApiComponent = () => {
   const [date, setDate] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('');
   const [expenseCategory, setExpenseCategory] = useState('');
-  const [postResponse, setPostResponse] = useState('');
-  const [getResponse, setGetResponse] = useState('');
+  const [postResponse, setPostResponse] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,10 +27,12 @@ const ExpenseTrackerPOSTApiComponent = () => {
 
     try {
         const response = await axios.post('http://localhost:8080/expenses', postData);
-        setPostResponse(response.data);
+        setPostResponse("Successfully added expense with response: " + response.status);
+        setError(null);
     } catch (error) {
         console.error('Error sending POST request to http://localhost:8080/expenses: ', error);
-        setPostResponse('Error sending POST request to http://localhost:8080/expenses: ', error);
+        setError('Error fetching data: ' + error );
+        setPostResponse(null);
     }
   };
 
@@ -44,7 +46,7 @@ const ExpenseTrackerPOSTApiComponent = () => {
       </div>
       <div>
           <label>Date:</label>
-          <input type="text" value={date} onChange={(e) => setDate(e.target.value)} required />
+          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
       </div>
       <div>
           <label>Amount:</label>
@@ -72,8 +74,10 @@ const ExpenseTrackerPOSTApiComponent = () => {
       </div>
       <button type="submit">Submit</button>
       </form>
-      <h3>Response:</h3>
-      <pre>{JSON.stringify(postResponse, null, 2)}</pre>
+      <h3>
+        {error && <p>ERROR: {error}</p>} {/* Display the variable if it has a value */}
+        {postResponse && <p>{postResponse}</p>} {/* Display the variable if it has a value */}
+      </h3>
     </div>
   );
 };

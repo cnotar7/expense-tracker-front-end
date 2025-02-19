@@ -3,6 +3,7 @@ import './App.css';
 import React, { useState } from 'react'
 import ExpenseTrackerPOSTApiComponent from './ExpenseTrackerPOSTApiComponent';
 import ExpenseTrackerGETApiComponent from './ExpenseTrackerGETApiComponent';
+import ExpenseTrackerDELETEApiComponent from './ExpenseTrackerDELETEApiComponent';
 
 function App() {
   const [selectedComponent, setSelectedComponent] = useState(null);
@@ -34,10 +35,12 @@ function App() {
         <nav>
           <button onClick={() => handleSelectComponent('AddExpenses')}>Add Expenses</button>
           <button onClick={() => handleSelectComponent('GetExpenseReport')}>Get Expense Report</button>
+          <button onClick={() => handleSelectComponent('DeleteExpense')}>Delete Expense</button>
         </nav>
         <div>
           {selectedComponent === 'AddExpenses' && <ExpenseTrackerPOSTApiComponent />}
           {selectedComponent === 'GetExpenseReport' && <ExpenseTrackerGETApiComponent />}
+          {selectedComponent === 'DeleteExpense' && <ExpenseTrackerDELETEApiComponent />}
         </div>
       </div>
     </div>
